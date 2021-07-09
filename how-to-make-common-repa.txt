@@ -1,0 +1,6 @@
+
+
+cd client
+rm -rf .git
+cd ..
+git init
