@@ -1,33 +1,33 @@
 const apiUrl = 'http://localhost:8080/auth';
 
-const apiToFetch = ({ method, body }) =>
-  fetch(apiUrl, {
+const fetchToApi = async ({ method, body } = {}) => {
+  const options = {
     method,
     credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(body),
-  });
+  };
+  if (method) {
+    options.body = JSON.stringify(body);
+  }
+  const request = await fetch(apiUrl, options);
+  return await request.json();
+};
 
 export const api = {
   async loginFetch(body, callbackFoo) {
-    const request = await apiToFetch({ method: 'POST', body });
-    const { username } = await request.json();
+    const { username } = await fetchToApi({ method: 'POST', body });
     callbackFoo(username);
   },
 
   async logoutFetch(callbackFoo) {
-    const request = await apiToFetch({ method: 'DELETE' });
-    const { username } = await request.json();
+    const { username } = await fetchToApi({ method: 'DELETE' });
     callbackFoo(username);
   },
 
   async checkUserFetch(callbackFoo) {
-    const request = await fetch(apiUrl, {
-      credentials: 'include',
-    });
-    const { username } = await request.json();
+    const { username } = await fetchToApi();
     callbackFoo(username);
   },
 };
